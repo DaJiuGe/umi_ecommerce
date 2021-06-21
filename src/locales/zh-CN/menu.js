@@ -1,5 +1,6 @@
 export default {
   'menu.welcome': '欢迎',
+  'menu.DashBoard': '统计面板',
   'menu.more-blocks': '更多区块',
   'menu.home': '首页',
   'menu.admin': '管理页',
@@ -7,7 +8,6 @@ export default {
   'menu.login': '登录',
   'menu.register': '注册',
   'menu.register.result': '注册结果',
-  'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',
   'menu.dashboard.workplace': '工作台',

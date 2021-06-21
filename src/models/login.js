@@ -1,68 +1,50 @@
-import { stringify } from 'querystring';
 import { history } from 'umi';
-import { fakeAccountLogin } from '@/services/login';
-import { setAuthority } from '@/utils/authority';
-import { getPageQuery } from '@/utils/utils';
+import { login, logout } from '@/services/login';
 import { message } from 'antd';
+
 const Model = {
   namespace: 'login',
-  state: {
-    status: undefined,
-  },
+  state: {},
   effects: {
     *login({ payload }, { call, put }) {
-      const response = yield call(fakeAccountLogin, payload);
-      yield put({
-        type: 'changeLoginStatus',
-        payload: response,
-      }); // Login successfully
+      // loading
+      const loading = message.loading('登录中...');
 
-      if (response.status === 'ok') {
-        const urlParams = new URL(window.location.href);
-        const params = getPageQuery();
-        message.success('🎉 🎉 🎉  登录成功！');
-        let { redirect } = params;
+      const response = yield call(login, payload);
+      if (response.status === undefined) {
+        message.success('登录成功');
+        yield put({
+          type: 'changeLoginStatus',
+          payload: response,
+        }); // Login successfully
 
-        if (redirect) {
-          const redirectUrlParams = new URL(redirect);
-
-          if (redirectUrlParams.origin === urlParams.origin) {
-            redirect = redirect.substr(urlParams.origin.length);
-
-            if (window.routerBase !== '/') {
-              redirect = redirect.replace(window.routerBase, '/');
-            }
-
-            if (redirect.match(/^\/.*#/)) {
-              redirect = redirect.substr(redirect.indexOf('#') + 1);
-            }
-          } else {
-            window.location.href = '/';
-            return;
-          }
-        }
-
-        history.replace(redirect || '/');
+        // 跳转到首页
+        history.replace('/');
       }
+
+      loading();
     },
 
-    logout() {
-      const { redirect } = getPageQuery(); // Note: There may be security issues, please note
+    *logout(_, { call }) {
+      // loading
+      const loading = message.loading('退出中...');
 
-      if (window.location.pathname !== '/user/login' && !redirect) {
-        history.replace({
-          pathname: '/user/login',
-          search: stringify({
-            redirect: window.location.href,
-          }),
-        });
+      const response = yield call(logout);
+      if (response.status === undefined) {
+        message.success('退出成功');
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('userInfo');
+        history.replace('/login');
       }
+
+      loading();
     },
   },
   reducers: {
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.currentAuthority);
-      return { ...state, status: payload.status, type: payload.type };
+      localStorage.setItem('access_token', payload.access_token);
+      // setAuthority(payload.currentAuthority);
+      return { ...state };
     },
   },
 };

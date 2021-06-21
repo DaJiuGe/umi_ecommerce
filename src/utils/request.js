@@ -1,6 +1,7 @@
 /** Request 网络请求工具 更详细的 api 文档: https://github.com/umijs/umi-request */
 import { extend } from 'umi-request';
-import { notification } from 'antd';
+import { message } from 'antd';
+
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
@@ -23,21 +24,31 @@ const codeMessage = {
  * @en-US Exception handler
  */
 
-const errorHandler = (error) => {
+const errorHandler = async (error) => {
   const { response } = error;
 
   if (response && response.status) {
-    const errorText = codeMessage[response.status] || response.statusText;
-    const { status, url } = response;
-    notification.error({
-      message: `Request error ${status}: ${url}`,
-      description: errorText,
-    });
+    let errorText = codeMessage[response.status] || response.statusText;
+    const { status } = response;
+
+    const result = await response.json();
+    if (status === 422) {
+      let errs = '';
+      if (Array.isArray(result.errors)) {
+        Object.keys(result.errors).forEach((key) => {
+          errs += result.errors[key][0];
+        });
+      }
+      errorText += `[ ${errs} ]`;
+    }
+
+    if (status === 400) {
+      errorText += `[ ${result.message} ]`;
+    }
+
+    message.error(errorText);
   } else if (!response) {
-    notification.error({
-      description: 'Your network is abnormal and cannot connect to the server',
-      message: 'Network anomaly',
-    });
+    message.error('你的网络发生异常，无法连接服务器');
   }
 
   return response;
@@ -48,8 +59,22 @@ const errorHandler = (error) => {
  */
 
 const request = extend({
-  errorHandler,
-  // default error handling
+  errorHandler, // default error handling
   credentials: 'include', // Does the default request bring cookies
 });
+
+// 请求拦截器
+request.interceptors.request.use((url, options) => {
+  const token = localStorage.getItem('access_token') || '';
+  const headers = {
+    Authorization: `Bearer ${token}`, // 注意是Authorization而不是Authorized
+  };
+  return {
+    url,
+    options: { ...options, headers },
+  };
+});
+
+// request.interceptors.response.use((req, res) => {});
+
 export default request;
