@@ -1,4 +1,4 @@
-import { queryCurrent, query as queryUsers } from '@/services/user';
+import { queryCurrent, getUsers as queryUsers } from '@/services/user';
 
 const UserModel = {
   namespace: 'user',

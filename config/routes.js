@@ -34,6 +34,12 @@ export default [
                 component: './DashBoard',
               },
               {
+                name: 'User',
+                path: '/user',
+                icon: 'UserOutlined',
+                component: './user',
+              },
+              {
                 component: './404',
               },
             ],
