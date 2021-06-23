@@ -12,6 +12,11 @@ const User = () => {
   const [createOrEditModalVisible, setCreateOrEditModalVisible] = useState(false);
   const [editId, setEditId] = useState(undefined);
 
+  const showCreateOrEditModalVisible = (isShow) => {
+    setCreateOrEditModalVisible(isShow);
+    setEditId(undefined);
+  };
+
   const columns = [
     {
       title: '头像',
@@ -110,7 +115,7 @@ const User = () => {
       {createOrEditModalVisible && (
         <CreateOrEdit
           visible={createOrEditModalVisible}
-          setVisible={setCreateOrEditModalVisible}
+          setVisible={showCreateOrEditModalVisible}
           parentTable={actionRef}
           editId={editId}
         />
