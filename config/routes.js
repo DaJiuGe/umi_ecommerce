@@ -37,7 +37,13 @@ export default [
                 name: 'User',
                 path: '/user',
                 icon: 'UserOutlined',
-                component: './user',
+                component: './User',
+              },
+              {
+                name: 'Goods',
+                path: '/goods',
+                icon: 'ShoppingOutlined',
+                component: './Goods',
               },
               {
                 component: './404',

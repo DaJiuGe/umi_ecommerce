@@ -1,12 +1,12 @@
 import React, { useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
-import { Button, Avatar, Switch, message } from 'antd';
-import { PlusOutlined, UserOutlined } from '@ant-design/icons';
-import { getUsers, lockUser } from '@/services/user';
+import { Image, Button, Switch, message } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { getGoods, onGoods, recommendGoods } from '@/services/goods';
 import CreateOrEdit from './components/CreateOrEdit';
 
-const User = () => {
+const Goods = () => {
   const actionRef = useRef();
 
   const [createOrEditModalVisible, setCreateOrEditModalVisible] = useState(false);
@@ -19,32 +19,49 @@ const User = () => {
 
   const columns = [
     {
-      title: '头像',
-      dataIndex: 'avatar',
+      title: '商品图',
+      dataIndex: 'cover_url',
       hideInSearch: true,
       render: (_, record) => (
-        <Avatar size={32} src={record.avatar_url} alt="头像" icon={<UserOutlined />} />
+        <Image
+          width={64}
+          src={record.cover_url}
+          alt="商品图"
+          placeholder={<Image width={400} src={record.cover_url} />}
+        />
       ),
     },
     {
-      title: '昵称',
-      dataIndex: 'name',
+      title: '标题',
+      dataIndex: 'title',
     },
     {
-      title: '邮箱',
-      dataIndex: 'email',
-    },
-    {
-      title: '是否锁定',
-      dataIndex: 'is_locked',
+      title: '价格',
+      dataIndex: 'price',
       hideInSearch: true,
+    },
+    {
+      title: '库存',
+      dataIndex: 'stock',
+      hideInSearch: true,
+    },
+    {
+      title: '销量',
+      dataIndex: 'sales',
+      hideInSearch: true,
+    },
+    {
+      title: '是否上架',
+      dataIndex: 'is_on',
+      valueType: 'radioButton',
+      valueEnum: { 0: '已下架', 1: '已上架' },
       render: (_, record) => (
         <Switch
-          unCheckedChildren="锁定"
-          checkedChildren="正常"
-          defaultChecked={!record.is_locked}
+          unCheckedChildren="已下架"
+          checkedChildren="已上架"
+          defaultChecked={record.is_on === 1}
           onChange={async () => {
-            const response = lockUser(record.id);
+            const response = onGoods(record.id);
             if (response.status === undefined) {
               message.success('修改成功');
               actionRef.current.reload();
@@ -54,14 +71,24 @@ const User = () => {
       ),
     },
     {
-      title: '创建时间',
-      dataIndex: 'created_at',
-      hideInSearch: true,
-    },
-    {
-      title: '更新时间',
-      dataIndex: 'updated_at',
-      hideInSearch: true,
+      title: '是否推荐',
+      dataIndex: 'is_recommend',
+      valueType: 'radioButton',
+      valueEnum: { 0: '未推荐', 1: '已推荐' },
+      render: (_, record) => (
+        <Switch
+          unCheckedChildren="未推荐"
+          checkedChildren="已推荐"
+          defaultChecked={record.is_recommend === 1}
+          onChange={async () => {
+            const response = recommendGoods(record.id);
+            if (response.status === undefined) {
+              message.success('修改成功');
+              actionRef.current.reload();
+            }
+          }}
+        />
+      ),
     },
     {
       title: '操作',
@@ -84,7 +111,7 @@ const User = () => {
       <ProTable
         columns={columns}
         actionRef={actionRef}
-        request={async (params = {}) => getUsers(params)}
+        request={async (params = {}) => getGoods(params)}
         editable={{
           type: 'multiple',
         }}
@@ -96,7 +123,7 @@ const User = () => {
           pageSize: 5,
         }}
         dateFormatter="string"
-        headerTitle="高级表格"
+        headerTitle="商品管理"
         toolBarRender={() => [
           <Button
             key="button"
@@ -111,7 +138,7 @@ const User = () => {
         ]}
       />
 
-      {/* 三元运算确保每次EditModal显示时,组件都能重新挂载 */}
+      {/* 确保每次EditModal显示时,组件都能重新挂载 */}
       {createOrEditModalVisible && (
         <CreateOrEdit
           visible={createOrEditModalVisible}
@@ -124,4 +151,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default Goods;
