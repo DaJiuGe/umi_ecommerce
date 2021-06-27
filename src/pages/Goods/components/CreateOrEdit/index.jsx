@@ -1,18 +1,16 @@
-import ProForm, {
-  ProFormText,
-  ProFormTextArea,
-  ProFormDigit,
-  ProFormUploadButton,
-} from '@ant-design/pro-form';
+import ProForm, { ProFormText, ProFormTextArea, ProFormDigit } from '@ant-design/pro-form';
 import React, { useEffect, useState } from 'react';
-import { Modal, Skeleton, message, Cascader } from 'antd';
+import { Modal, Skeleton, message, Cascader, Button } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import { getGoodsDetail, addGoods, updateGoods } from '@/services/goods';
 import { getCategories } from '@/services/category';
+import AliyunOSSUpload from '@/components/AliyunOSSUpload';
 
 const CreateOrEdit = (props) => {
   const { visible, setVisible, parentTable, editId } = props;
   const [dataInfo, setUserInfo] = useState(undefined);
   const [categories, setCategories] = useState([]);
+  const [form] = ProForm.useForm();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,7 +63,11 @@ const CreateOrEdit = (props) => {
       {dataInfo === undefined && editId !== undefined ? (
         <Skeleton active paragraph={{ rows: 3 }} />
       ) : (
-        <ProForm initialValues={dataInfo} onFinish={async (values) => handleSubmit(values)}>
+        <ProForm
+          form={form}
+          initialValues={dataInfo}
+          onFinish={async (values) => handleSubmit(values)}
+        >
           <ProForm.Item
             label="分类"
             name="catogo_id"
@@ -105,11 +107,20 @@ const CreateOrEdit = (props) => {
             max={99999999}
             rules={[{ required: true, message: '请输入库存' }]}
           />
-          <ProFormUploadButton
+          <ProForm.Item
             label="封面图"
             name="cover"
             rules={[{ required: true, message: '请选择封面图' }]}
-          />
+          >
+            <AliyunOSSUpload
+              accept="image/*"
+              onUploadDone={(value) => {
+                form.setFieldsValue({ cover: value });
+              }}
+            >
+              {<Button icon={<UploadOutlined />}>点击上传</Button>}
+            </AliyunOSSUpload>
+          </ProForm.Item>
           <ProFormTextArea
             label="详情"
             name="details"

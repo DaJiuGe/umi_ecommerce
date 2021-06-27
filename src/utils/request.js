@@ -32,6 +32,7 @@ const errorHandler = async (error) => {
     const { status } = response;
 
     const result = await response.json();
+
     if (status === 422) {
       let errs = '';
       if (Array.isArray(result.errors)) {
@@ -66,6 +67,8 @@ const request = extend({
 // 请求拦截器
 request.interceptors.request.use((url, options) => {
   const token = localStorage.getItem('access_token') || '';
+  // const token =
+  //   'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvYXBpLnNob3AuZWR1d29yay5jblwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYyNDgwNTgyOSwiZXhwIjoxNjI1MTY1ODI5LCJuYmYiOjE2MjQ4MDU4MjksImp0aSI6IjZ0Z0d4NW9ndGJlQlJsSlkiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.wcfV8O84ePqaCnLOhCgOubon2cnz1AguRPgQZ3ToGzs';
   const headers = {
     Authorization: `Bearer ${token}`, // 注意是Authorization而不是Authorized
   };
