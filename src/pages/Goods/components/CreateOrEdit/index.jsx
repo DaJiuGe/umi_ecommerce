@@ -5,12 +5,14 @@ import { UploadOutlined } from '@ant-design/icons';
 import { getGoodsDetail, addGoods, updateGoods } from '@/services/goods';
 import { getCategories } from '@/services/category';
 import AliyunOSSUpload from '@/components/AliyunOSSUpload';
+import Editor from '@/components/Editor';
 
 const CreateOrEdit = (props) => {
   const { visible, setVisible, parentTable, editId } = props;
-  const [dataInfo, setUserInfo] = useState(undefined);
+  const [dataInfo, setDataInfo] = useState(undefined);
   const [categories, setCategories] = useState([]);
   const [form] = ProForm.useForm();
+  const [defaultUploadFileList, setDefaultUploadFileList] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,11 +26,17 @@ const CreateOrEdit = (props) => {
       if (editId !== undefined) {
         const response = await getGoodsDetail(editId);
         if (response.status === undefined) {
-          setUserInfo({
-            name: response.name,
-            email: response.email,
-            password: response.password,
-          });
+          const { pid, id } = response.category;
+          setDefaultUploadFileList([
+            {
+              name: response.cover,
+              percent: 100,
+              status: 'done',
+              thumbUrl: response.cover_url,
+              url: response.cover_url,
+            },
+          ]);
+          setDataInfo({ ...response, category_id: [pid, id] });
         } else {
           setVisible(false);
         }
@@ -40,9 +48,9 @@ const CreateOrEdit = (props) => {
   const handleSubmit = async (values) => {
     let response;
     if (editId !== undefined) {
-      response = await updateGoods(editId, values);
+      response = await updateGoods(editId, { ...values, category_id: values.category_id[1] });
     } else {
-      response = await addGoods(values);
+      response = await addGoods({ ...values, category_id: values.category_id[1] });
     }
 
     if (response.status === undefined) {
@@ -61,7 +69,7 @@ const CreateOrEdit = (props) => {
       destroyOnClose
     >
       {dataInfo === undefined && editId !== undefined ? (
-        <Skeleton active paragraph={{ rows: 3 }} />
+        <Skeleton active paragraph={{ rows: 12 }} />
       ) : (
         <ProForm
           form={form}
@@ -70,7 +78,7 @@ const CreateOrEdit = (props) => {
         >
           <ProForm.Item
             label="分类"
-            name="catogo_id"
+            name="category_id"
             rules={[{ required: true, message: '请选择分类' }]}
           >
             <Cascader
@@ -114,19 +122,25 @@ const CreateOrEdit = (props) => {
           >
             <AliyunOSSUpload
               accept="image/*"
-              onUploadDone={(value) => {
+              defaultUploadFileList={defaultUploadFileList}
+              onUploaded={(value) => {
                 form.setFieldsValue({ cover: value });
               }}
             >
               {<Button icon={<UploadOutlined />}>点击上传</Button>}
             </AliyunOSSUpload>
           </ProForm.Item>
-          <ProFormTextArea
+          <ProForm.Item
             label="详情"
             name="details"
             placeholder="请输入详情"
             rules={[{ required: true, message: '请输入详情' }]}
-          />
+          >
+            <Editor
+              onEdited={(value) => form.setFieldsValue({ details: value })}
+              content={dataInfo ? dataInfo.details : ''}
+            />
+          </ProForm.Item>
         </ProForm>
       )}
     </Modal>

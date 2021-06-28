@@ -40,7 +40,12 @@ const AliyunOSSUpload = (props) => {
    */
   const onChange = ({ file }) => {
     if (file.status === 'done') {
-      props.onUploadDone(file.key);
+      if (props.onUploaded !== undefined) {
+        props.onUploaded(file.key);
+      }
+      if (props.onPictureUploaded !== undefined) {
+        props.onPictureUploaded(file.url);
+      }
       message.success('上传成功');
     }
   };
@@ -75,6 +80,8 @@ const AliyunOSSUpload = (props) => {
     action: OSSData.host,
     listType: 'picture',
     maxCount: 1,
+    defaultFileList: props.defaultUploadFileList,
+    showUploadList: props.showUploadList === undefined ? true : props.showUploadList,
     data: getExtraData,
     onChange,
     beforeUpload,
