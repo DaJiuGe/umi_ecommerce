@@ -19,7 +19,9 @@ const UserModel = {
       let userInfo = JSON.parse(localStorage.getItem('userInfo'));
       if (!userInfo) {
         userInfo = yield call(queryCurrent);
-        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+        if (userInfo.id !== undefined) {
+          localStorage.setItem('userInfo', JSON.stringify(userInfo));
+        }
       }
 
       yield put({
