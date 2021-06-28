@@ -1,9 +1,9 @@
 import request from '@/utils/request';
 
-export async function login(params) {
+export async function login(data) {
   return request('/api/auth/login', {
     method: 'POST',
-    data: params,
+    data,
   });
 }
 

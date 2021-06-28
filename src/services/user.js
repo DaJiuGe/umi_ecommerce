@@ -9,11 +9,11 @@ export async function lockUser(uid) {
 export async function getUser(uid) {
   return request.get(`/api/admin/users/${uid}`);
 }
-export async function addUser(params) {
-  return request.post(`/api/admin/users`, { data: params });
+export async function addUser(data) {
+  return request.post(`/api/admin/users`, { data });
 }
-export async function updateUser(uid, params) {
-  return request.put(`/api/admin/users/${uid}`, { data: params });
+export async function updateUser(uid, data) {
+  return request.put(`/api/admin/users/${uid}`, { data });
 }
 export async function queryCurrent() {
   return request('/api/admin/user');
