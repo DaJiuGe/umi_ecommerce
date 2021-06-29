@@ -3,6 +3,7 @@ export default {
   'menu.DashBoard': '统计面板',
   'menu.User': '用户管理',
   'menu.Goods': '商品管理',
+  'menu.Category': '分类管理',
   'menu.more-blocks': '更多区块',
   'menu.home': '首页',
   'menu.admin': '管理页',

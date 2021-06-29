@@ -46,6 +46,12 @@ export default [
                 component: './Goods',
               },
               {
+                name: 'Category',
+                path: '/category',
+                icon: 'BarsOutlined',
+                component: './Category',
+              },
+              {
                 component: './404',
               },
             ],
