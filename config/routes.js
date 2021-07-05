@@ -52,6 +52,12 @@ export default [
                 component: './Category',
               },
               {
+                name: 'Order',
+                path: '/order',
+                icon: 'MoneyCollectOutlined',
+                component: './Order',
+              },
+              {
                 component: './404',
               },
             ],
