@@ -21,7 +21,7 @@ jobs:
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@3.0.0
         with:
-          ftp-server: ftp://dajiuge.ink/umi-ecommerce_admin
+          ftp-server: ftp://dajiuge.ink/umi-ecommerce-admin
           ftp-username: ${{ secrets.ftp_user }}
           ftp-password: ${{ secrets.ftp_pwd }}
           local-dir: dist/
