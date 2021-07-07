@@ -58,6 +58,18 @@ export default [
                 component: './Order',
               },
               {
+                name: 'Comment',
+                path: '/comments',
+                icon: 'CommentOutlined',
+                component: './Comment',
+              },
+              {
+                name: 'Slide',
+                path: '/slide',
+                icon: 'SlidersOutlined',
+                component: './Slide',
+              },
+              {
                 component: './404',
               },
             ],

@@ -5,6 +5,8 @@ export default {
   'menu.Goods': '商品管理',
   'menu.Category': '分类管理',
   'menu.Order': '订单管理',
+  'menu.Comment': '评论管理',
+  'menu.Slide': '轮播管理',
   'menu.more-blocks': '更多区块',
   'menu.home': '首页',
   'menu.admin': '管理页',

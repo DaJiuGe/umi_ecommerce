@@ -8,6 +8,6 @@ export async function getOrderDetail(id, params) {
   return request(`/api/admin/orders/${id}`, { params });
 }
 
-export async function postOrder(id) {
-  return request.patch(`/api/admin/orders/${id}/post`);
+export async function postOrder(id, data) {
+  return request.patch(`/api/admin/orders/${id}/post`, { data });
 }

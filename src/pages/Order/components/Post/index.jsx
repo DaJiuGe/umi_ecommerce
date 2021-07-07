@@ -3,12 +3,12 @@ import { Modal, message } from 'antd';
 import { postOrder } from '@/services/order';
 import ProForm, { ProFormSelect, ProFormText } from '@ant-design/pro-form';
 
-const OrderDetail = (props) => {
+const Post = (props) => {
   const { visible, setVisible, orderId } = props;
 
   const handleSubmit = async (values) => {
     const response = await postOrder(orderId, values);
-    if (response.erros === undefined) {
+    if (response === undefined || response.message !== undefined) {
       message.success('发货成功');
     }
   };
@@ -44,4 +44,4 @@ const OrderDetail = (props) => {
   );
 };
 
-export default OrderDetail;
+export default Post;

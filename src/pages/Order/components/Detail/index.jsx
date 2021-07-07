@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Skeleton, Image, Typography, Row, Col, Divider } from 'antd';
 import { getOrderDetail } from '@/services/order';
 
-const OrderDetail = (props) => {
+const Detail = (props) => {
   const { visible, setVisible, orderId } = props;
   const [dataInfo, setDataInfo] = useState(undefined);
 
@@ -29,7 +29,7 @@ const OrderDetail = (props) => {
       }
     };
     fetchData();
-  }, []);
+  }, [orderId, setVisible]);
 
   return (
     <Modal
@@ -71,4 +71,4 @@ const OrderDetail = (props) => {
   );
 };
 
-export default OrderDetail;
+export default Detail;

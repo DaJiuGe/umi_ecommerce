@@ -2,24 +2,24 @@ import React, { useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import { Tag } from 'antd';
-import OrderDetail from './components/OrderDetail';
-import OrderPost from './components/OrderPost';
+import Detail from './components/Detail';
+import Post from './components/Post';
 import { getOrders } from '@/services/order';
 
 const Order = () => {
   const actionRef = useRef();
 
-  const [orderDetailModalVisible, setOrderDetailModalVisible] = useState(false);
-  const [orderPostModalVisible, setOrderPostModalVisible] = useState(false);
+  const [detailModalVisible, setDetailModalVisible] = useState(false);
+  const [PostModalVisible, setPostModalVisible] = useState(false);
   const [orderId, setOrderId] = useState(undefined);
 
-  const showOrderDetailModalVisible = (isShow) => {
-    setOrderDetailModalVisible(isShow);
+  const showDetailModalVisible = (isShow) => {
+    setDetailModalVisible(isShow);
     setOrderId(undefined);
   };
 
-  const showOrderPostModalVisible = (isShow) => {
-    setOrderPostModalVisible(isShow);
+  const showPostModalVisible = (isShow) => {
+    setPostModalVisible(isShow);
     setOrderId(undefined);
   };
 
@@ -86,7 +86,7 @@ const Order = () => {
           key="detail"
           onClick={() => {
             setOrderId(record.id);
-            setOrderDetailModalVisible(true);
+            setDetailModalVisible(true);
           }}
         >
           详情
@@ -96,7 +96,7 @@ const Order = () => {
             key="post"
             onClick={() => {
               setOrderId(record.id);
-              setOrderPostModalVisible(true);
+              setPostModalVisible(true);
             }}
           >
             发货
@@ -136,19 +136,15 @@ const Order = () => {
         toolBarRender={null}
       />
 
-      {orderDetailModalVisible && (
-        <OrderDetail
-          visible={orderDetailModalVisible}
-          setVisible={showOrderDetailModalVisible}
+      {detailModalVisible && (
+        <Detail
+          visible={detailModalVisible}
+          setVisible={showDetailModalVisible}
           orderId={orderId}
         />
       )}
-      {orderPostModalVisible && (
-        <OrderPost
-          visible={orderPostModalVisible}
-          setVisible={showOrderPostModalVisible}
-          orderId={orderId}
-        />
+      {PostModalVisible && (
+        <Post visible={PostModalVisible} setVisible={showPostModalVisible} orderId={orderId} />
       )}
     </PageContainer>
   );
