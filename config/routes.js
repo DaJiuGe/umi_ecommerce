@@ -10,7 +10,7 @@ export default [
           {
             name: 'login',
             path: '/login',
-            component: './login',
+            component: './Login',
           },
         ],
       },
