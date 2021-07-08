@@ -7,6 +7,15 @@
  * https://pro.ant.design/docs/deploy
  */
 export default {
+  prod: {
+    '/api/': {
+      target: 'https://api.shop.eduwork.cn',
+      changeOrigin: true,
+      pathRewrite: {
+        '^': '',
+      },
+    },
+  },
   dev: {
     '/api/': {
       target: 'https://api.shop.eduwork.cn',

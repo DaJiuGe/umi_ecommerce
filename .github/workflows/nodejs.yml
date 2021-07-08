@@ -24,6 +24,6 @@ jobs:
           ftp-server: ftp://dajiuge.ink/umi-ecommerce-admin
           ftp-username: ${{ secrets.ftp_user }}
           ftp-password: ${{ secrets.ftp_pwd }}
-          local-dir: dist/
+          local-dir: build/
         env:
           CI: true
